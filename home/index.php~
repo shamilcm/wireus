@@ -1,0 +1,259 @@
+<!-- HOME PAGE -->
+
+<?php 
+
+        session_start();
+        if($_SESSION['authuser']!=1)
+                header("Location:../front.php");
+      ?>  
+<html>
+
+<head>
+<link rel="icon" 
+      href="../favicon.ico">
+</link>
+<title> Wireus </title>
+
+<link rel="stylesheet" type="text/css" href="../style2.css" />
+<script type="text/javascript" src="../jquery.js"></script>
+<script type="text/javascript" src="../jquery.tablescroll.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+        $('#gridfriends').tableScroll({height:400, width:270});
+   $(".globalheader").click(function(){
+                $(".globalheader").stop().animate({top:"0px"},"slow");
+           });
+ $(".globalheader").hover(function(){
+         },
+         function() {
+		 $(".globalheader").stop().animate({top:"-30px"},"slow");
+         });
+
+
+});
+
+</script>
+
+</head>
+
+
+<body>
+
+
+    <div class="globalheader" id="gl">
+        <div class="globalheaderwrapper"> 
+                    <div class="controlpanel">
+                            <?php  echo "<a href=\"../home\">Home</a>"; ?>
+                            |
+                            <a href="editprofile.php">Edit Profile</a>
+                            |
+                            <a href="editphotos.php?id=1">Edit Photos</a>
+                            |
+                            <a href="editgroups.php">Edit Groups</a>
+                            |
+                            <a href="../logout.php">Logout</a>   
+                    </div>
+                    <div class="globalheadermain">
+                                <div class="globalheaderhome">
+                                <?php session_start(); 
+                                echo "<a href=\"../home\"><img src=\"../images/img_headerlogo.png\"></img></a>";
+                                    ?>
+                                </div>
+                                <div class="globalheadersearch"> 
+                                <form action="../search.php" method="GET" id="searchform">
+                                <table>
+                                    <tr>
+                                        <td>
+                                        <div class="inputwrapper">
+                                        <input type="text" name="key" id="searchbox" />
+                                        </div>
+                                        </td>
+                                        <td>
+                                        <div class="searchbutton">
+                                        <input type="submit" class="btn_search"  id="btn_search" value="">
+                                        </div>
+                                        </td>
+                                     </tr>
+                                </table>
+                                </form>
+                                </div>
+                    </div>
+       </div>
+    </div>
+
+    <div class="globalcontainer">
+		<div class="wrapper">
+			<div id="pagecontainer">  
+			        <div id="pageleft">
+			                <div id="profilepic">
+				        <?php  
+				        include('../connectionfile.php');
+				        $username=$_SESSION['username'];
+				        $sql=dbconfn()->prepare("select * from w_profiles where username='$username'");
+				        $sql->execute();
+				        $result=$sql->fetch(PDO::FETCH_LAZY);
+				        if($result[profpic])
+                                              echo "<img src=\"".$result['profpic']."\"></img>";
+				       
+                        echo "</div>";
+                        echo "<div id=\"friendlist\">";
+		        $count=0;
+		        $friendcount=0;
+		        $sql_friends=dbconfn()->prepare("(select username2 from w_connections where username1='$username' and           status='A' order by random()) union (select username1 from w_connections where username2='$username' and status='A' order by random())");
+		        $sql_friends->execute();
+		        $result_friends=$sql_friends->fetchAll(PDO::FETCH_NUM);
+		        $friendcount=($sql_friends->rowCount());
+		        echo "Connections (".$friendcount.")<br/>";
+		        echo "<table class=\"gridtable\" id=\"gridfriends\">
+		              <tbody>
+                               <tr class=\"gridrow\">";
+                        foreach($result_friends as $row1=>$val)
+		          {
+                            echo "<td class=\"gridcell\">";
+                            $sql_friendinfo=dbconfn()->prepare("select profpic, fname, lname from w_profiles where username='$val[0]'");
+                            $sql_friendinfo->execute();
+                            $result_friendinfo=$sql_friendinfo->fetch(PDO::FETCH_LAZY);
+					        echo "<a href=\"../profile?id=$val[0]&pid=profile\">";
+                            $name = $result_friendinfo[1]." ".$result_friendinfo[2];
+                            echo "<img src=\"$result_friendinfo[0]\" title=\"$name\"></img></a>";
+                            $count++;
+                            echo "</td>";
+            
+					        if($count%5==0)
+						        { 
+                                   echo "</tr>";
+                                   echo "<tr>";
+                                   }
+                  
+                            }	
+                            echo "</tr></tbody> </table>";
+				     ?>
+                        
+			                </div>
+                    <div id="grouplist">
+                    <?php
+                    $count=0;
+                    $groupcount=0;
+	            $sql_groups=dbconfn()->prepare("select name,w_groups.groupid from w_groups, w_membership where w_groups.groupid=w_membership.groupid and w_membership.username='$username' and w_membership.status='A' order by random();");
+	            $sql_groups->execute();
+		    $result_groups=$sql_groups->fetchAll(PDO::FETCH_NUM);
+		    $groupcount=($sql_groups->rowCount());
+	            echo "Groups (".$groupcount.")<br/>";
+	            echo "<table id=\"grouptable\">
+		          <tbody>"; 
+                    foreach($result_groups as $row1=>$val)
+		    {   echo "<tr class=\"grouprow\">";
+                        echo "<td class=\"groupcell\">";
+                        echo "<a href=\"../groups?id=$val[1]&pid=profile\">$val[0]</a>";
+                        $count++;
+                        echo "</td>";
+                        
+                        echo "</tr>";
+                         }
+       
+                    echo "</tr></tbody> </table>";
+                    ?>
+                    </div>      
+			        </div>
+			   <div id="pageright">
+                <div id="pagehead">
+                <?php
+                        echo "<div id=\"pagetitle\">";
+                        $sql_name=dbconfn()->prepare("select fname,lname from w_profiles where username='$username'");
+                        $sql_name->execute();
+                        $result_name=$sql_name->fetch();
+                        echo $result_name[0]." ".$result_name[1];
+                        echo "</div>";
+			        ?>
+                </div>
+			        <div id="pagelinks">
+				<?php
+					echo "<a id=\"clickprofiles\" href=\"../home?pid=profile\"> Profile </a>";
+					echo "| <a id=\"clickphotos\" href=\"../home?pid=photos\"> Photos </a>";
+					echo "| <a id=\"clickmessges\" href=\"../home?pid=msgs\"> Messages </a>";
+	        		?>
+		                </div>
+			        <div id="pagecontent">
+				<?php
+				        
+				       
+				       if($_GET['pid']=="msgs")
+				        {
+				       echo "<div id=\"messagebox\">";
+				        echo "<div id=\"messagehead\">Messages</div>";
+				        $count=0;
+				        echo "<form action=\"../sendmsg.php\" method=\"POST\">";
+				        echo "<textarea name=\"msg\" cols=70 rows=5 >$result[5]</textarea>";
+				        echo "<input type=\"hidden\" name=\"sender\" value=\"$username\" />";
+				        echo "<input type=\"hidden\" name=\"recipent\" value=\"$username\" /><br/>";
+				        echo "<input type=\"submit\" name=\"submit\" value=\"Send\" />";
+				        echo "</form>";
+					$sql_msgs=dbconfn()->prepare("select content from w_msgs where recipent='$username'");
+					$sql_msgs->execute();
+					$result_msgs=$sql_msgs->fetchAll(PDO::FETCH_NUM);
+					foreach($result_msgs as $row2=>$val)
+					{
+						echo "<div id='msg'>".$val[0]."</div>";
+						$count++;
+						
+						if($count==10)
+							break;
+					}	
+				
+				        echo "</div>";
+				        
+				        }
+				        
+				      else if($_GET['pid']=="photos")
+				        {
+				       echo "<div id=\"messagebox\">";
+				        echo "<div id=\"messagehead\">Photos</div>";
+				        echo "</div>";
+				      }
+				      
+				     else
+				      {
+				      echo "<div id=\"messagebox\">";
+				        echo "<div id=\"messagehead\">Profile</div>";
+				        
+				        $sql_profile=dbconfn()->prepare("select * from w_profiles where username='$username'");
+					$sql_profile->execute();
+					$result_profile=$sql_profile->fetch(PDO::FETCH_LAZY);
+				        echo "<br/>";
+				        echo "<br/>";
+				        echo "<h3> Date Of Birth:  $result_profile[3]</h3>";
+				        echo "<h3> Sex : $result_profile[4]</h3>";
+				        echo "<h3> Bio:  $result_profile[5]</h3>";
+				        echo "</div>";
+				        
+							      
+                                       }
+				      
+				?>
+				
+
+			        </div>
+			   </div>
+			</div>
+			<div class="bottombox">
+				<div id="bottomline"> </div>
+				<div id="copyright">
+			        <span> WIREUS &#169 2011 </span>
+				</div>
+				
+				
+				<div id="linkbox">
+				<a href="about.php">About</a>
+				 . 
+				<a href="privacy.php">Privacy</a>
+				 . 
+				<a href="help.php">Help</a>
+		        </div>
+	          </div>
+				
+		</div>
+	</div>
+</body>
+
+
+</html>

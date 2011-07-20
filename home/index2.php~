@@ -1,0 +1,198 @@
+<?php 
+
+        session_start();
+        if($_SESSION['authuser']!=1)
+                header("Location:../front.php");
+      ?>  
+<html>
+
+<head>
+<link rel="icon" 
+      href="../favicon.ico">
+</link>
+<title> Wireus </title>
+
+<link rel="stylesheet" type="text/css" href="../style2.css">
+<script type="text/javascript" src="../jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#photobox").hide();
+    $("#groupbox").hide();
+});
+</script>
+
+</head>
+
+
+<body>
+    
+    
+   
+    <div class=globalheader>
+     <div class="globalheaderwrapper"> 
+           <div class="globalheaderhome">
+	     <?php session_start(); 
+	      echo "<a href=\"../home?profile=".$_SESSION['username']."\"><img src=\"../images/img_headerlogo.png\"></img></a>";
+	       ?>
+	    </div>
+	    <div class="globalheaderlink"> 
+	    		<?php  echo "<a href=\"../home?profile=".$_SESSION['username']."\">Home</a>"; ?>
+	    		    |
+	    		<a href="editprofile.php">Edit Profile</a>
+		            |
+		        <a href="editphotos.php">Edit Photos</a>
+		            |
+		        <a href="editgroups.php">Edit Groups</a>
+		            |
+		        <a href="../logout.php">Logout</a>   
+	    </div>
+      </div>
+    </div>
+	<div class=globalcontainer>
+	
+		<div class="wrapper">
+			<div id="pagecontainer">  
+			        <div id="pageleft">
+			                <div id="profilepic">topbox
+				        <?php  
+				        include('../connectionfile.php');
+				        $uname=$_GET[profile];
+				        $sql=dbconfn()->prepare("select * from w_profiles where username='$_GET[profile]'");
+				        $sql->execute();
+				        $result=$sql->fetch(PDO::FETCH_LAZY);
+				        //echo $result[profpic];
+		           	
+		                         /*foreach (dbconfn()->query($sql) as $row)
+		                        {
+		                             echo $row['fname'] .' - '. $row['lname'] . '<br />';
+		                            echo "<img src=\"../images/profiles/default.jpg\"></img>";
+				            echo "Hello else";
+                
+		                                 }
+				                */
+				                /*
+				                $row=dbconfn()->query($sql);
+				                echo $row;*/
+				        if($result[profpic])
+				        {
+					echo "<img src=\"".$result['profpic']."\"></img>";
+				        }
+				        else
+				        {
+					echo "<img src=\"../images/profiles/default.jpg\"></img>";
+				        
+				        }
+				        ?>
+			                </div>
+			                <div id="friendlist">
+			        	<?php
+				        /*include('../connectionfile.php');*/
+				        $uname=$_GET[profile];
+				        $count=0;
+				        $friendcount=0;
+				        $sql1=dbconfn()->prepare("select username2 from w_connections where username1='$_GET[profile]' and status='a'
+				        order by random()");
+				        $sql2=dbconfn()->prepare("select username1 from w_connections where username2='$_GET[profile]' and status='a'
+				        order by random()");
+				        $sql1->execute();
+				        $sql2->execute();
+				        $result1=$sql1->fetchAll(PDO::FETCH_NUM);
+				        $result2=$sql2->fetchAll(PDO::FETCH_NUM);
+				        $friendcount=($sql1->rowCount())+($sql2->rowCount());
+				        echo "Friends (".$friendcount.")<br/>";
+				        foreach($result1 as $row1=>$val)
+				        {
+					        echo "<a href=\"../home?profile=".$val[0]."\" class=\"friendlink\">".$val[0]."</a>";
+					        //echo $val[0];
+					        $count++;
+					        echo "<br/>";
+					        if($count==5)
+						        break;
+				        }	
+				        foreach($result2 as $row2=>$val)
+				        {
+					        echo "<a href=\"../home?profile=".$val[0]."\" class=\"friendlink\">".$val[0]."</a>";
+					        //echo $val[0];
+					        $count++;
+					        echo "<br/>";
+					        if($count==5)
+						        break;
+				        }			
+				
+				        ?>
+			                </div>
+			                <div id="grouplist"></div>
+			        </div>
+			   <div id="pageright">
+			        <div id="pagetitle">
+			
+			        <?php
+				$sqlfname=dbconfn()->prepare("select fname,lname from w_profiles where username='$_GET[profile]'");
+				$sqlfname->execute();
+				$result=$sqlfname->fetch();
+				echo $result[0]." ".$result[1]."   :   A.k.A      ".$_GET[profile];
+				
+			        ?>
+			        </div>
+			        <div id="pagelinks">
+				<?php
+					//echo "<a href=\"../home?profile=".$_SESSION['username']."\">Home</a>";
+					echo "<a id=\"clickmessage\" href=\"../home?profile=".$_GET[profile]."\">Messages</a>";
+					/*	<>
+					<a href="about.php">Photos</a>
+				 		<> 
+					<a href="privacy.php">Groups</a>*/
+	        		?>
+		        </div>
+			<div id="topboxrtbottom">
+				<div id="messagebox">
+				<div id="messagehead">Messages -></div>
+				<?php
+					//include('../connectionfile.php');
+					$count=0;
+					$sql=dbconfn()->prepare("select content from w_msgs where recipent='$_GET[profile]'");
+					$sql->execute();
+					$result=$sql->fetchAll(PDO::FETCH_NUM);
+					foreach($result as $row2=>$val)
+					{
+						echo "<div id='msg'>".$val[0]."</div>";
+						$count++;
+						
+						if($count==10)
+							break;
+					}	
+					//echo $result;
+					//echo "<div id='msg'>".$result['content']."</div>";
+					/*foreach(dbconfn()->query($sql) as $row)
+					{
+						echo ;
+					}*/
+				?>
+				</div>
+				<div id="photobox"></div>
+				<div id="groupbox"></div>
+			</div>
+			</div>
+			</div>
+			<div class="bottombox">
+				<div id="bottomline"> </div>
+				<div id="copyright">
+			        <span> WIREUS &#169 2011 </span>
+				</div>
+				
+				
+				<div id="linkbox">
+				<a href="about.php">About</a>
+				 . 
+				<a href="privacy.php">Privacy</a>
+				 . 
+				<a href="help.php">Help</a>
+		        </div>
+			 </div>
+				
+		</div>
+	</div>
+</body>
+
+
+</html>

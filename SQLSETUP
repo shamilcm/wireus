@@ -1,0 +1,295 @@
+--This project is only tested with PostgreSQL, its working in my sql hasn't been tested. These are the sql commands 
+--   for the tables and the sequences(used to increment the ids of photos, messages, etc) 
+
+-- This file needs correction, check if all relations which contains sequences works...(w_photos, w_groups, w_msgs, w_gmsgid)
+
+--Tables --
+
+CREATE TABLE w_gmsgs (
+    gmsgid integer NOT NULL,
+    content character varying(1000),
+    s_username character varying(30),
+    r_groupid integer,
+    send_date_time timestamp without time zone
+);
+
+CREATE TABLE w_connections (
+    username1 character varying(30) NOT NULL,
+    username2 character varying(30) NOT NULL,
+    status character(1)
+);
+
+CREATE TABLE w_gmsgs (
+    gmsgid integer NOT NULL,
+    content character varying(1000),
+    s_username character varying(30),
+    r_groupid integer,
+    send_date_time timestamp without time zone
+);
+
+CREATE TABLE w_groups (
+    groupid integer NOT NULL,
+    name character varying(20),
+    description character varying(1000),
+    type character(1),
+    owner character varying(30),
+    create_date_time timestamp without time zone
+);
+
+CREATE TABLE w_membership (
+    username character varying(30) NOT NULL,
+    groupid integer NOT NULL,
+    status character(1)
+);
+
+CREATE TABLE w_msgs (
+    msgid integer NOT NULL,
+    content character varying(1000),
+    sender character varying(30),
+    recipent character varying(30),
+    send_date_time timestamp without time zone,
+    privacy character(1)
+);
+
+CREATE TABLE w_photos (
+    photoid integer DEFAULT nextval('"w_photos_photoID_seq"'::regclass) NOT NULL,
+    path character varying(150),
+    title character varying(50),
+    description character varying(500),
+    up_date_time timestamp without time zone,
+    username character varying(30)
+);
+
+CREATE TABLE w_profiles (
+    username character varying(30) NOT NULL,
+    fname character varying(20),
+    lname character varying(20),
+    dob date,
+    sex character varying(10),
+    bio character varying(1000),
+    profpic character varying(150)
+);
+
+CREATE TABLE w_users (
+    username character varying(30) NOT NULL,
+    password character varying(32) NOT NULL,
+    email character varying(30)
+);
+
+
+
+        CREATE SEQUENCE w_gmsgs_gmsgid_seq
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 92233720368547787
+        START 13370
+        CACHE 1;
+
+        CREATE SEQUENCE w_gmsgs_gmsgid_seq1
+        START WITH 1
+        INCREMENT BY 1
+        NO MAXVALUE
+        NO MINVALUE
+        CACHE 1;
+
+ALTER SEQUENCE w_gmsgs_gmsgid_seq1 OWNED BY w_gmsgs.gmsgid;
+
+
+        CREATE SEQUENCE w_groups_groupid_seq
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 92233720368547787
+        START 13370
+        CACHE 1;
+          
+        CREATE SEQUENCE w_groups_groupid_seq1
+        START WITH 1
+        INCREMENT BY 1
+        NO MAXVALUE
+        NO MINVALUE
+        CACHE 1;
+    
+ALTER SEQUENCE w_groups_groupid_seq1 OWNED BY w_groups.groupid;
+  
+        CREATE SEQUENCE w_msgs_msgid_seq
+        INCREMENT 1
+        MINVALUE 1
+        MAXVALUE 9223372036854775807
+        START 13370
+        CACHE 1;
+        
+        CREATE SEQUENCE w_msgs_msgid_seq1
+        START WITH 1
+        INCREMENT BY 1
+        NO MAXVALUE
+        NO MINVALUE
+        CACHE 1;
+
+ALTER SEQUENCE w_msgs_msgid_seq1 OWNED BY w_msgs.msgid;
+
+
+ 
+
+  CREATE SEQUENCE "w_photos_photoD_seq"
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 13370
+  CACHE 1;
+  
+
+
+ALTER TABLE ONLY w_connections
+    ADD CONSTRAINT connections_pkey PRIMARY KEY (username1, username2);
+
+
+--
+-- Name: membership_pkey; Type: CONSTRAINT; Schema: public; Owner:  ; Tablespace: 
+--
+
+ALTER TABLE ONLY w_membership
+    ADD CONSTRAINT membership_pkey PRIMARY KEY (username, groupid);
+
+
+--
+-- Name: msgs_pkey; Type: CONSTRAINT; Schema: public; Owner:  ; Tablespace: 
+--
+
+ALTER TABLE ONLY w_msgs
+    ADD CONSTRAINT msgs_pkey PRIMARY KEY (msgid);
+
+
+--
+-- Name: profiles_pkey; Type: CONSTRAINT; Schema: public; Owner:  ; Tablespace: 
+--
+
+ALTER TABLE ONLY w_profiles
+    ADD CONSTRAINT profiles_pkey PRIMARY KEY (username);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner:  ; Tablespace: 
+--
+
+ALTER TABLE ONLY w_users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (username);
+
+
+--
+-- Name: w_gmsgs_pkey; Type: CONSTRAINT; Schema: public; Owner:  ; Tablespace: 
+--
+
+ALTER TABLE ONLY w_gmsgs
+    ADD CONSTRAINT w_gmsgs_pkey PRIMARY KEY (gmsgid);
+
+
+--
+-- Name: w_groups_pkey; Type: CONSTRAINT; Schema: public; Owner:  ; Tablespace: 
+--
+
+ALTER TABLE ONLY w_groups
+    ADD CONSTRAINT w_groups_pkey PRIMARY KEY (groupid);
+
+
+--
+-- Name: w_photos_pkey; Type: CONSTRAINT; Schema: public; Owner:  ; Tablespace: 
+--
+
+ALTER TABLE ONLY w_photos
+    ADD CONSTRAINT w_photos_pkey PRIMARY KEY (photoid);
+
+
+--
+-- Name: w_connections_username1_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_connections
+    ADD CONSTRAINT w_connections_username1_fkey FOREIGN KEY (username1) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_connections_username2_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_connections
+    ADD CONSTRAINT w_connections_username2_fkey FOREIGN KEY (username2) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_gmsgs_r_groupid_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_gmsgs
+    ADD CONSTRAINT w_gmsgs_r_groupid_fkey FOREIGN KEY (r_groupid) REFERENCES w_groups(groupid) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_gmsgs_s_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_gmsgs
+    ADD CONSTRAINT w_gmsgs_s_username_fkey FOREIGN KEY (s_username) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_groups_owner_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_groups
+    ADD CONSTRAINT w_groups_owner_fkey FOREIGN KEY (owner) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_membership_groupid_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_membership
+    ADD CONSTRAINT w_membership_groupid_fkey FOREIGN KEY (groupid) REFERENCES w_groups(groupid) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_membership_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_membership
+    ADD CONSTRAINT w_membership_username_fkey FOREIGN KEY (username) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_msgs_recipent_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_msgs
+    ADD CONSTRAINT w_msgs_recipent_fkey FOREIGN KEY (recipent) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_msgs_sender_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_msgs
+    ADD CONSTRAINT w_msgs_sender_fkey FOREIGN KEY (sender) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_photos_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_photos
+    ADD CONSTRAINT w_photos_username_fkey FOREIGN KEY (username) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: w_profiles_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner:  
+--
+
+ALTER TABLE ONLY w_profiles
+    ADD CONSTRAINT w_profiles_username_fkey FOREIGN KEY (username) REFERENCES w_users(username) ON UPDATE CASCADE ON DELETE CASCADE;
+    
+/* Change the owner of all the tables to your database username
+/* an example 
+
+ALTER TABLE public.w_profiles OWNER TO  dbownername;
+
+*/
+

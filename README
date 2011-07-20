@@ -1,0 +1,136 @@
+------
+README
+------
+
+WIREUS 0.1.1 "Infinite Dreams"
+09 April 2011
+
+This is the README file for Wireus, the Open Source Social Networking
+platform. 
+
+License
+=======
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public
+License along with this program, in the file "COPYING".  If not, see
+<http://www.gnu.org/licenses/>.
+
+    IMPORTANT NOTE: The GNU Affero General Public License (AGPL) has
+    *different requirements* from the "regular" GPL. In particular, if
+    you make modifications to the WIREUS source code on your server,
+    you *MUST MAKE AVAILABLE* the modified version of the source code
+    to your users under the same license. 
+
+Testing
+======
+The project is currently hosted in
+        http://athena.nitc.ac.in/~b090084cs/
+
+
+
+About
+=====
+
+This is the first official release  of WIREUS (0.1.1), an open source
+social networking platform with basic social networking features.
+
+       + Features
+           * Connect with various people
+           * Share your status message.
+           * Send Open and Private messages to your friends
+           * Share photos
+           * Create open or moderated groups
+           * Send group messages
+       +Technical
+           * Multiple database support
+           
+
+Prerequisites
+=============
+
+The following software packages are *required* for this software to
+run correctly.
+
+- PHP 5.2.3+. It may be possible to run this software on earlier
+  versions of PHP, but many of the functions used are only available
+  in PHP 5.2 or above. 5.2.6 or later. PHP 5.3.x should work correctly in this
+  release.
+  
+- MySQL 5.x. or PostgreSQL 8.4+.
+
+Your PHP installation must include the following PHP extensions:
+
+- GD (php5-gd). For image thumbnailing   
+
+
+Installation
+============
+
+
+1. Unpack the tarball you downloaded on your Web server. e.g.
+
+       tar zxf wireus-0.1.1.tar.gz
+
+   ...which will make a wireus-0.1.1 subdirectory in your current
+   directory. (If you don't have shell access on your Web server, you
+   may have to unpack the tarball on your local computer and FTP the
+   files to the server.)
+
+2. Move the tarball to a directory of your choosing in your Web root
+   directory. e.g.
+       mv wireus-0.1.1 /var/www/wireus
+
+   This will make your Wireus instance available in the your server, like "http://sample.com/wireus".  
+   
+3. Make your target directory writeable by the Web server.
+
+       e.g. chmod 777 /var/www/wireus/
+
+   On some systems, this will probably work:
+
+       chgrp www-data /var/www/wireus/
+       chmod g+w /var/www/wireus/
+
+
+4. Create a database in pgsql or mysql.
+
+   Note that WIREUS must have its own database; you can't share the
+   database with another program. You can name it whatever you want,
+   though.
+
+5. Create a new database account that Wireus will use to access the
+   database. Grant all permissions for the database user account, 
+   (users are called ROLES in postgreSQL)
+
+
+6. Create the tables as specified in the file named "SQLSETUPs" in the
+   wireus folder.
+   
+7. Edit lib/connectionfile.php, and specify the names of all the variables
+   mentioned in the file
+   
+For further queries, contact   
+   
+Authors
+=======
+  Shamil CM <shamil.cm@gmail.com>
+  Sreeraj <sreeraj.altair@gmail.com>
+
+Other Contributers
+==================
+ <None>
+
+
+
+--------------------------------------------------------
+
