@@ -116,7 +116,7 @@ Installation
 6. Create the tables as specified in the file named "SQLSETUPs" in the
    wireus folder.
    
-7. Edit lib/connectionfile.php, and specify the names of all the variables
+7. Rename rename.connectionfile.php (in the lib/ directory) to connectionfile.php, and specify the names of all the variables as
    mentioned in the file
    
 For further queries, contact   
