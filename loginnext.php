@@ -2,8 +2,8 @@
 	session_start();
 
 	include('lib/connectionfile.php');
-	$uname=$_POST[username];
-	$password1=$_POST[password];
+	$uname= pg_escape_string($_POST[username]);
+	$password1= pg_escape_string($_POST[password]);
 	$encpass = md5($password1);
 	
 	 
