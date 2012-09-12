@@ -189,7 +189,7 @@ $(document).ready(function(){
 		  <div class="bottombox">
 		        <div id="bottomline"> </div>
 		        <div id="copyright">
-	                <span> WIREUS &#169 2011 </span>
+	                <span> WIREUS Inc. Developed by  Sreeraj and Shamil. <a style="text-decoration:none; flot:right;" href="http://github.com/shamilcm/wireus">http://github.com/shamilcm/wireus</a></span>
 		        </div>
 		        
 		        
