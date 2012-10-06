@@ -198,7 +198,7 @@ union (select username1 from w_connections where username2='$cur_username' and s
                         $sql_name=dbconfn()->prepare("select fname,lname from w_profiles where username='$username'");
                         $sql_name->execute();
                         $result_name=$sql_name->fetch();
-                        echo $result_name[0]." ".$result_name[1];
+                        echo strip_tags($result_name[0])." ".strip_tags($result_name[1]);
                         echo "</div>";
                         
                         echo "<div id=\"friendrequestbox\">";
@@ -260,7 +260,7 @@ union (select username1 from w_connections where username2='$cur_username' and s
                         $sql_status=dbconfn()->prepare("select content from w_msgs where sender='$username' and recipent='$username' order by send_date_time desc ;");
                         $sql_status->execute();
                         $result_status=$sql_status->fetch();
-                        echo "<div id=\"statusmsg\">$result_status[0]</div>";
+                        echo "<div id=\"statusmsg\">".htmlspecialchars($result_status[0])."</div>";
                         echo "</div>";
                         ?>
 			        
@@ -353,7 +353,7 @@ onmouseout=\"this.style.opacity=1;this.filters.alpha.opacity=100\"/></a>";
 						        <input type=\"submit\" class=\"btn_delmsg\"  value=\"\" /></form>";
                                                         
 						echo "<div class=\"msgdetails\">";
-						echo $val[0];
+						echo htmlspecialchars($val[0]);
                                                
 						
 						echo "</div>";
@@ -461,7 +461,7 @@ onmouseout=\"this.style.opacity=1;this.filters.alpha.opacity=100\"/></a>";
 				        $dt = date("F j, Y",strtotime($result_profile[3]));
 				        echo "<div class=\"profdetail\"> Date Of Birth:  </div>". $dt."<br/><br/>";
 				        echo "<div class=\"profdetail\">  Sex : </div> $result_profile[4]<br/><br/>";
-				        echo "<div class=\"profdetail\">  About Me: </div><br/>  $result_profile[5]<br/><br/>";
+				        echo "<div class=\"profdetail\">  About Me: </div><br/> ".htmlspecialchars( $result_profile[5])."<br/><br/>";
 				        echo "</div>";
 				        echo "</div>";
                                         }

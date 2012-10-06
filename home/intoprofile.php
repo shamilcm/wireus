@@ -19,11 +19,11 @@
 	}
 	else
 	{
-		$sql1="UPDATE w_profiles SET fname='$_POST[fname]' WHERE username='$_SESSION[username]'";
-		$sql2="UPDATE w_profiles SET lname='$_POST[lname]' WHERE username='$_SESSION[username]'";
+		$sql1="UPDATE w_profiles SET fname='".strip_tags($_POST[fname])."' WHERE username='$_SESSION[username]'";
+		$sql2="UPDATE w_profiles SET lname='".strip_tags($_POST[lname])."' WHERE username='$_SESSION[username]'";
 		$sql3="UPDATE w_profiles SET dob='$dob' WHERE username='$_SESSION[username]'";
 		$sql4="UPDATE w_profiles SET sex='$_POST[sex]' WHERE username='$_SESSION[username]'";
-		$sql5="UPDATE w_profiles SET bio='$_POST[bio]' WHERE username='$_SESSION[username]'";
+		$sql5="UPDATE w_profiles SET bio='".htmlspecialchars($_POST[bio])."' WHERE username='$_SESSION[username]'";
 		$count1=dbconfn()->prepare($sql1);
 		$count1->execute();
 		//echo $count1;
