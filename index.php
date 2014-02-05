@@ -7,6 +7,7 @@ if (isset($_SESSION['authuser']))
 	if($_SESSION['authuser']==1)
 	{
 		header("Location:home?profile=$_SESSION[username]");
+		exit;
 	}
 }
 
