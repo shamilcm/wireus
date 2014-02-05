@@ -9,10 +9,14 @@ if (isset($_SESSION['authuser']))
 		header("Location:home?profile=$_SESSION[username]");
 	}
 }
-$id = $_GET['xid'];
-if(!($id>=1 && $id<=8))
+
+if (isset($_GET['xid'])) 
 {
-	$id=0;
+	$id = $_GET['xid'];
+	if(!($id>=1 && $id<=8))
+	{
+		$id=0;
+	}
 }
          
 ?>
