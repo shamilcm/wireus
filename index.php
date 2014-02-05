@@ -28,9 +28,7 @@ else
 <html>
 
 <head>
-<link rel="icon" 
-      href="favicon.ico">
-</link>
+<link rel="icon" href="favicon.ico">
 <title> Wireus </title>
 
 <link rel="stylesheet" type="text/css" href="themes/style.css">
