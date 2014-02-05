@@ -86,9 +86,7 @@ $(document).ready(function(){
   	     });
   		  
 });
-</script>
 </script> 
-</link>
 
 </head>
 
