@@ -19,6 +19,10 @@ if (isset($_GET['xid']))
 		$id=0;
 	}
 }
+else
+{
+	$id = 0;
+}
          
 ?>
 <html>
