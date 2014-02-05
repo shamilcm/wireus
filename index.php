@@ -2,14 +2,17 @@
 <?php
 
 session_start();
-if($_SESSION['authuser']==1)
+if (isset($_SESSION['authuser'])) 
 {
-	header("Location:home?profile=$_SESSION[username]");
-}
-$id = $_GET['xid'];
-if(!($id>=1 && $id<=8))
-{
-	$id=0;
+	if($_SESSION['authuser']==1)
+	{
+		header("Location:home?profile=$_SESSION[username]");
+	}
+	$id = $_GET['xid'];
+	if(!($id>=1 && $id<=8))
+	{
+		$id=0;
+	}
 }
          
 ?>
