@@ -2,23 +2,33 @@
 <?php
 
 session_start();
-if($_SESSION['authuser']==1)
+if (isset($_SESSION['authuser'])) 
 {
-	header("Location:home?profile=$_SESSION[username]");
+	if($_SESSION['authuser']==1)
+	{
+		header("Location:home?profile=$_SESSION[username]");
+		exit;
+	}
 }
-$id = $_GET['xid'];
-if(!($id>=1 && $id<=8))
+
+if (isset($_GET['xid'])) 
 {
-	$id=0;
+	$id = $_GET['xid'];
+	if(!($id>=1 && $id<=8))
+	{
+		$id=0;
+	}
+}
+else
+{
+	$id = 0;
 }
          
 ?>
 <html>
 
 <head>
-<link rel="icon" 
-      href="favicon.ico">
-</link>
+<link rel="icon" href="favicon.ico">
 <title> Wireus </title>
 
 <link rel="stylesheet" type="text/css" href="themes/style.css">
@@ -76,9 +86,7 @@ $(document).ready(function(){
   	     });
   		  
 });
-</script>
 </script> 
-</link>
 
 </head>
 
